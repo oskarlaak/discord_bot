@@ -16,6 +16,7 @@ async def hello_world(context):
     await channel.send('Hello World')
 
 
+<<<<<<< HEAD
 @MyBot.command(aliases=['save_image'], pass_context=True)
 async def saveimage(context, URL, filename):
     response = requests.get(URL)
@@ -36,6 +37,8 @@ async def displayimage(context, filename):
         await channel.send('Could not find requested image')
 
 
+=======
+>>>>>>> f50eac96f3da1f272a884a236073a83245a43ccd
 @MyBot.event
 async def on_message(message):
     username = str(message.author)[:-5]  # Removing #xxxx from username

@@ -32,7 +32,7 @@ async def displayimage(context, filename):  # Requires name without file extensi
     channel = context.channel
     for f in os.listdir('images'):
         if f.startswith(filename):
-            await MyBot.send_file(channel, 'images/{}'.format(f))  # Should work
+            await MyBot.send_file(channel, 'images/{}'.format(f))
             break
     else:
         print("Could not find image named '{}' to display".format(filename))

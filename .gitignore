@@ -103,4 +103,6 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-images/
+# Only commit empty images folder
+images/*
+!images/.gitkeep

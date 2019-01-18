@@ -1,4 +1,5 @@
 import os
+import discord
 import dotenv
 from discord.ext.commands import Bot
 import requests
@@ -14,6 +15,16 @@ MyBot = Bot(command_prefix=BOT_PREFIXES)
 async def helloworld(context):
     channel = context.channel
     await channel.send('Hello World')
+
+
+@MyBot.command(aliases=['del_messages'], pass_context=True)
+async def delmessages(context, i):
+    if int(i) > 100:
+        i = 100
+
+    # Goes through message history and deletes given number of latest messages
+    async for m in context.channel.history(limit=int(i)):
+        await m.delete()
 
 
 @MyBot.command(aliases=['save_image', 'send_image'], pass_context=True)
@@ -32,7 +43,7 @@ async def displayimage(context, filename):  # Requires name without file extensi
     channel = context.channel
     for f in os.listdir('images'):
         if f.startswith(filename):
-            await MyBot.send_file(channel, 'images/{}'.format(f))
+            await channel.send(file=discord.File('images/{}'.format(f)))
             break
     else:
         print("Could not find image named '{}' to display".format(filename))
@@ -61,14 +72,17 @@ async def deletesingle(context, filename):  # Requires full name
 @MyBot.event
 async def on_message(message):
     username = str(message.author)[:-5]  # Removing #xxxx from username
-    user_message = message.content
 
     if message.author == MyBot.user:
         user_type = 'MyBot'
     else:
         user_type = 'User'
 
-    print("{} '{}' said: {}".format(user_type, username, user_message))
+    if message.content.startswith(BOT_PREFIXES):
+        await message.delete()  # Deleting commands
+    elif message.content != '':
+        print("{} '{}' said: {}".format(user_type, username, message.content))
+
     await MyBot.process_commands(message)
 
 

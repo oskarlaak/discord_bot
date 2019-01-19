@@ -1,4 +1,5 @@
 import os
+import json
 import discord
 import dotenv
 from discord.ext.commands import Bot
@@ -72,6 +73,18 @@ async def deletesingle(context, filename):  # Requires full name
 @MyBot.event
 async def on_message(message):
     username = str(message.author)[:-5]  # Removing #xxxx from username
+
+    # Get data from json file
+    try:
+        with open('jsons/{}.json'.format(username), 'r') as json_file:
+            data = json.load(json_file)
+    except FileNotFoundError:
+        data = {}
+
+    # Update and dump new data
+    data[len(data)] = message.content
+    with open('jsons/{}.json'.format(username), 'w') as json_file:
+        json.dump(data, json_file)
 
     if message.author == MyBot.user:
         user_type = 'MyBot'
